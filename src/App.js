@@ -6,15 +6,34 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
 
 const App = () => {
   const [countries, setCountries] = useState([]);
+  const [filteredCountries, setFilteredCountries] = useState([]);
+  const [search, setSearch] = useState('');
+
   useEffect(() => {
     axios
       .get('https://restcountries.com/v3.1/all')
       .then((response) => {
         setCountries(response.data);
-        console.log("response:", response);
+        setFilteredCountries(response.data);
       })
       .catch((error) => console.error('API fetch failed', error));
   }, []);
+
+  const handleSearch = (e) => {
+    const query = e.target.value.toLowerCase();
+    setSearch(query);
+    const results = countries.filter(
+      (country) =>
+        country.name.common.toLowerCase().includes(query) ||
+        Object.values(country.languages || {}).some((lang) =>
+          lang.toLowerCase().includes(query)
+        ) ||
+        Object.values(country.currencies || {}).some((currency) =>
+          currency.name.toLowerCase().includes(query)
+        )
+    );
+    setFilteredCountries(results);
+  };
 
   const gridOptions = {
     columnDefs: [
@@ -37,17 +56,23 @@ const App = () => {
             : 'N/A',
       },
     ],
-    rowData: countries,
+    rowData: filteredCountries,
     pagination: true,
     paginationPageSize: 10,
   };
   return (
     <div className="App">
       <h1>Countries Info</h1>
+      <input
+        type="text"
+        placeholder="Search by name, language, currency"
+        value={search}
+        onChange={handleSearch}
+      />
       <div className="ag-theme-alpine" style={{ height: 500, width: '100%' }}>
       <AgGridReact
         columnDefs={gridOptions.columnDefs}
-        rowData={countries}
+        rowData={filteredCountries}
         pagination={gridOptions.pagination}
         paginationPageSize={gridOptions.paginationPageSize}
       />
