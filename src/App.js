@@ -8,6 +8,9 @@ const App = () => {
   const [countries, setCountries] = useState([]);
   const [filteredCountries, setFilteredCountries] = useState([]);
   const [search, setSearch] = useState('');
+  const [favorite, setFavorite] = useState(
+    JSON.parse(localStorage.getItem('favorites')) || []
+  );
 
   useEffect(() => {
     axios
@@ -35,6 +38,14 @@ const App = () => {
     setFilteredCountries(results);
   };
 
+  const handleFavorite = (country) => {
+    setFavorite((prev) =>
+      prev.some((fav) => fav.name.common === country.name.common)
+        ? prev.filter((fav) => fav.name.common !== country.name.common)
+        : [...prev, country]
+    );
+  };
+
   const gridOptions = {
     columnDefs: [
       { field: 'name.common', headerName: 'Country Name' },
@@ -54,6 +65,19 @@ const App = () => {
                 .map((currency) => currency.name)
                 .join(', ')
             : 'N/A',
+      },
+      {
+        headerName: 'Actions',
+        cellRenderer: (params) => {
+          const isFavorite = favorite.some(
+            (fav) => fav.name.common === params.data.name.common
+          );
+          return (
+            <button onClick={() => handleFavorite(params.data)}>
+              {isFavorite ? 'Remove from Favorite' : 'Add to Favorite'}
+            </button>
+          );
+        },
       },
     ],
     rowData: filteredCountries,
@@ -77,6 +101,14 @@ const App = () => {
         paginationPageSize={gridOptions.paginationPageSize}
       />
       </div>
+      <h2>Favorite Countries:</h2>
+      <ul>
+        {favorite.map((fav) => (
+          <li key={fav.name.common}>
+            {fav.name.common}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
