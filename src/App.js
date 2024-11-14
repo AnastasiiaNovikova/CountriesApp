@@ -47,9 +47,12 @@ const App = () => {
   };
 
   const gridOptions = {
+    defaultColDef: {
+      sortable: false
+  },
     columnDefs: [
-      { field: 'name.common', headerName: 'Country Name' },
-      { field: 'population', headerName: 'Population' },
+      { field: 'name.common', headerName: 'Country Name', sortable: true },
+      { field: 'population', headerName: 'Population', sortable: true },
       {
         headerName: 'Languages',
         valueGetter: (params) =>
