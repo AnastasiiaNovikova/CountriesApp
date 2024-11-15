@@ -123,7 +123,14 @@ const App = () => {
         rowData={filteredCountries}
         pagination={gridOptions.pagination}
         paginationPageSize={gridOptions.paginationPageSize}
-        onRowClicked={(event) => setSelectedCountry(event.data)}
+        onRowClicked={(event) => {
+          if (selectedCountry?.name.common === event.data.name.common) {
+            setSelectedCountry(null);
+          }
+          else {
+            setSelectedCountry(event.data)
+          }
+        }}
       />
       </div>
       {selectedCountry && (
