@@ -11,6 +11,7 @@ const App = () => {
   const [favorite, setFavorite] = useState(
     JSON.parse(localStorage.getItem('favorites')) || []
   );
+  const [selectedCountry, setSelectedCountry] = useState(null);
 
   useEffect(() => {
     axios
@@ -83,7 +84,6 @@ const App = () => {
         },
       },
     ],
-    rowData: filteredCountries,
     pagination: true,
     paginationPageSize: 10,
   };
@@ -102,8 +102,26 @@ const App = () => {
         rowData={filteredCountries}
         pagination={gridOptions.pagination}
         paginationPageSize={gridOptions.paginationPageSize}
+        onRowClicked={(event) => setSelectedCountry(event.data)}
       />
       </div>
+      {selectedCountry && (
+          <div className="selected-country">
+            <h2>{selectedCountry.name.common}</h2>
+            <img
+              src={selectedCountry.flags.png}
+              alt={`${selectedCountry.name.common} flag`}
+              style={{ width: '150px', borderRadius: '10px', marginBottom: '10px' }}
+            />
+            <p><strong>Population:</strong> {selectedCountry.population}</p>
+            <p><strong>Region:</strong> {selectedCountry.region}</p>
+            <p><strong>Subregion:</strong> {selectedCountry.subregion}</p>
+            <p><strong>Languages:</strong> {Object.values(selectedCountry.languages || {}).join(', ')}</p>
+            <p><strong>Currencies:</strong> {Object.values(selectedCountry.currencies || {})
+              .map((currency) => currency.name)
+              .join(', ')}</p>
+          </div>
+        )}
       <h2>Favorite Countries:</h2>
       <ul>
         {favorite.map((fav) => (
