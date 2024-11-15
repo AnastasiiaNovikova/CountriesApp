@@ -10,7 +10,7 @@ const App = () => {
   const [filteredCountries, setFilteredCountries] = useState([]);
   const [search, setSearch] = useState('');
   const [favorite, setFavorite] = useState(
-    JSON.parse(localStorage.getItem('favorites')) || []
+    JSON.parse(localStorage.getItem('favorite')) || []
   );
   const [selectedCountry, setSelectedCountry] = useState(null);
 
@@ -41,11 +41,12 @@ const App = () => {
   };
 
   const handleFavorite = (country) => {
-    setFavorite((prev) =>
+    const updatedFavorites = prev =>
       prev.some((fav) => fav.name.common === country.name.common)
         ? prev.filter((fav) => fav.name.common !== country.name.common)
-        : [...prev, country]
-    );
+        : [...prev, country];
+    setFavorite(updatedFavorites);
+    localStorage.setItem('favorite', JSON.stringify(updatedFavorites(favorite)));
   };
 
   const gridOptions = {
