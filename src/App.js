@@ -53,6 +53,27 @@ const App = () => {
   },
     columnDefs: [
       { field: 'name.common', headerName: 'Country Name', sortable: true },
+      {
+        headerName: 'Flag',
+        field: 'flags',
+        cellRendererFramework: (params) => {
+          if (params.value && params.value.png) {
+            return (
+              <img
+                src={params.value.png}
+                alt={`Flag of ${params.data.name.common}`}
+                style={{
+                  width: '40px',
+                  height: '25px',
+                  borderRadius: '3px',
+                }}
+              />
+            );
+          }
+          return <span>No Flag</span>;
+        },
+        width: 80,
+      },
       { field: 'population', headerName: 'Population', sortable: true },
       {
         headerName: 'Languages',
