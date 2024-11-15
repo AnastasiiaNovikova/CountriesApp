@@ -1,6 +1,6 @@
-## This project allows to see information about countries, returned by  [Countries API](https://restcountries.com/v3.1/all).
+## Project allows to see information about countries, returned by [REST Countries API](https://restcountries.com/v3.1/all).
 
-## Featues:
+## Features:
 - Add countries to favorite.
 - Filter / search countries by name, language, currency.
 - Sort by country name and population.
@@ -25,4 +25,8 @@ When `yarn` is installed run:
 
 ## To run tests:
 
-### `yarn test`, or `yarn test--watchAll`
+### `yarn test`
+
+or 
+
+### `yarn test--watchAll`
