@@ -41,7 +41,7 @@ const App = () => {
   };
 
   const handleFavorite = (country) => {
-    const updatedFavorites = prev =>
+    const updatedFavorites = (prev) =>
       prev.some((fav) => fav.name.common === country.name.common)
         ? prev.filter((fav) => fav.name.common !== country.name.common)
         : [...prev, country];
@@ -58,7 +58,7 @@ const App = () => {
       {
         headerName: 'Flag',
         field: 'flags',
-        cellRendererFramework: (params) => {
+        cellRenderer: (params) => {
           if (params.value && params.value.png) {
             return (
               <img
@@ -126,6 +126,9 @@ const App = () => {
         pagination={gridOptions.pagination}
         paginationPageSize={gridOptions.paginationPageSize}
         onRowClicked={(event) => {
+          if (event.event.target.tagName === 'BUTTON') {
+            return; 
+          }
           if (selectedCountry?.name.common === event.data.name.common) {
             setSelectedCountry(null);
           }
@@ -152,14 +155,16 @@ const App = () => {
               .join(', ')}</p>
           </div>
         )}
-      <h2>Favorite Countries:</h2>
-      <ul>
-        {favorite.map((fav) => (
-          <li key={fav.name.common}>
-            {fav.name.common}
-          </li>
-        ))}
-      </ul>
+        {favorite.length > 0 && (
+          <div className="favorites-section">
+            <h2>Your Favorite Countries</h2>
+            <ul>
+              {favorite.map((fav) => (
+                <li key={fav.name.common}>{fav.name.common}</li>
+              ))}
+            </ul>
+          </div>
+        )}
     </div>
   );
 };
